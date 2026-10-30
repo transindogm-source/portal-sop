@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal SOP - PT. Transindo Global Seven</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header Navigation -->
+    <header class="bg-white border-b-2 border-red-600 shadow-sm sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-3 bg-white px-1 py-0.5">
+                    <img id="main-logo" src="logo-transindo.png" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 540 220\'><path d=\'M25 28L135 28L62 195L25 195L82 66L25 66Z\' fill=\'%23E51B24\'/><path d=\'M125 28L210 28L137 195L100 195L157 66L125 66Z\' fill=\'%23111827\'/><text x=\'220\' y=\'90\' font-family=\'sans-serif\' font-weight=\'900\' font-size=\'55\' fill=\'%23111827\'>TRANS<tspan fill=\'%23E51B24\'>INDO</tspan></text><text x=\'220\' y=\'140\' font-family=\'sans-serif\' font-weight=\'900\' font-size=\'28\' fill=\'%23111827\'>PT. TRANSINDO GLOBAL SEVEN</text><text x=\'220\' y=\'180\' font-family=\'sans-serif\' font-weight=\'900\' font-size=\'28\' fill=\'%23111827\'>REGULATED AGENT</text></svg>'" alt="Logo PT. Transindo Global Seven" class="h-12 w-auto object-contain flex-shrink-0">
+                </div>
+                <div class="border-l-2 border-slate-200 pl-4 hidden sm:block">
+                    <div class="flex items-center space-x-2">
+                        <h1 class="text-lg font-extrabold text-slate-900 tracking-tight leading-none">PORTAL SOP</h1>
+                        <span class="bg-red-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Official</span>
+                    </div>
+                    <p class="text-[11px] font-semibold text-slate-500 mt-0.5">Sistem Manajemen Dokumen</p>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3">
+                <button onclick="toggleVisualGuide()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-1.5 rounded-xl flex items-center space-x-1.5 shadow transition">
+                    <i data-lucide="help-circle" class="w-4 h-4"></i>
+                    <span>Panduan Visual Copas</span>
+                </button>
+                <div class="bg-slate-900 text-white p-1 rounded-xl flex items-center space-x-1 border border-slate-800 text-xs">
+                    <span class="px-2 text-[10px] font-semibold uppercase text-slate-400 hidden sm:inline">Role Simulasi:</span>
+                    <button id="role-admin" onclick="setRole('internal_admin')" class="px-3 py-1 rounded-lg font-bold text-xs bg-red-600 text-white shadow flex items-center space-x-1">
+                        <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+                        <span>Staf Internal / Admin</span>
+                    </button>
+                    <button id="role-mitra" onclick="setRole('external_mitra')" class="px-3 py-1 rounded-lg font-bold text-xs text-slate-400 hover:text-white flex items-center space-x-1">
+                        <i data-lucide="globe" class="w-3.5 h-3.5"></i>
+                        <span>Mitra Eksternal / Shipper</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Info Banner -->
+    <div class="bg-slate-900 text-slate-200 py-3 px-4 border-b border-slate-800 text-xs">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+            <div class="flex items-center space-x-2">
+                <i data-lucide="info" class="w-4 h-4 text-red-500 flex-shrink-0"></i>
+                <span>Sistem Dokumentasi Keamanan Kargo & Penanganan Pos Terintegrasi Ber-Watermark Otomatis.</span>
+            </div>
+            <div class="font-mono text-[11px] text-slate-400">
+                Akses Aktif: <span id="access-badge" class="text-white font-bold underline">INTERNAL FULL ACCESS</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex-1 w-full">
+        <!-- Controls Bar -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+            <div class="flex items-center bg-white p-1 rounded-xl border border-slate-200 shadow-sm text-xs font-semibold">
+                <button onclick="setTab('all')" id="tab-all" class="px-4 py-2 rounded-lg bg-slate-900 text-white shadow">Semua SOP</button>
+                <button onclick="setTab('internal')" id="tab-internal" class="px-4 py-2 rounded-lg text-slate-600 hover:text-red-600 flex items-center space-x-1.5">
+                    <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+                    <span>SOP Internal</span>
+                </button>
+                <button onclick="setTab('external')" id="tab-external" class="px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 flex items-center space-x-1.5">
+                    <i data-lucide="globe" class="w-3.5 h-3.5"></i>
+                    <span>SOP Eksternal</span>
+                </button>
+                <button onclick="setTab('logs')" id="tab-logs" class="px-4 py-2 rounded-lg text-slate-600 hover:text-indigo-600 flex items-center space-x-1.5">
+                    <i data-lucide="history" class="w-3.5 h-3.5"></i>
+                    <span>Audit Log</span>
+                </button>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <div id="search-container" class="relative w-full sm:w-64">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="search-input" onkeyup="renderSops()" placeholder="Cari Kode atau Judul..." class="w-full pl-9 pr-3 py-2 text-xs bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-red-500 outline-none shadow-sm">
+                </div>
+
+                <button id="btn-add-sop" onclick="openAddModal()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-xl flex items-center space-x-1.5 shadow transition flex-shrink-0">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span>Tambah SOP Baru</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Cards Grid Area -->
+        <div id="sops-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+
+        <!-- Audit Log Area -->
+        <div id="logs-container" class="hidden bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-4 border-b border-slate-200 bg-slate-900 text-white flex items-center justify-between">
+                <div>
+                    <h3 class="font-bold text-sm">Audit Trail Akses Dokumen SOP</h3>
+                    <p class="text-xs text-slate-400">Log riwayat akses pembacaan & keamanan Regulated Agent Transindo.</p>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider">
+                            <th class="p-3.5">Waktu</th>
+                            <th class="p-3.5">Pengguna</th>
+                            <th class="p-3.5">Peran</th>
+                            <th class="p-3.5">Dokumen</th>
+                            <th class="p-3.5">Aksi</th>
+                            <th class="p-3.5">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logs-table-body" class="divide-y divide-slate-100 text-slate-700"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 border-t-2 border-red-600 py-6 text-xs mt-auto">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center space-x-2">
+                <span class="font-bold text-white">PT. TRANSINDO GLOBAL SEVEN</span>
+                <span>• Regulated Agent Portal SOP</span>
+            </div>
+            <div class="text-center sm:text-right">
+                <p class="text-[11px] text-slate-500">© 2026 PT. Transindo Global Seven. Hak Cipta Dilindungi Undang-Undang.</p>
+                <p class="text-[10px] text-slate-600 font-mono mt-0.5">develop@her67</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- View Document Modal -->
+    <div id="modal-view" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-5 overflow-y-auto">
+        <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden flex flex-col my-auto max-h-[92vh]">
+            <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between border-b-2 border-red-600 z-30">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-red-600 p-2 rounded-lg"><i data-lucide="file-text" class="w-5 h-5 text-white"></i></div>
+                    <div>
+                        <h3 id="view-title" class="font-bold text-sm text-white">Judul Dokumen</h3>
+                        <p id="view-code" class="text-[11px] text-slate-400 font-mono">Kode Dokumen</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="window.print()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3.5 py-1.5 rounded-lg flex items-center space-x-1.5">
+                        <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+                        <span>Cetak / PDF</span>
+                    </button>
+                    <button onclick="closeModal('modal-view')" class="text-slate-400 hover:text-white p-1 rounded-lg"><i data-lucide="x" class="w-5 h-5"></i></button>
+                </div>
+            </div>
+            <div class="relative flex-1 overflow-y-auto p-6 md:p-10 bg-slate-200 select-none">
+                <!-- Paper View -->
+                <div class="relative bg-white shadow-xl border border-slate-300 rounded-xl max-w-3xl mx-auto p-8 md:p-12 text-slate-800 overflow-hidden">
+                    <!-- Watermark Layer (Di atas Kertas Dokumen) -->
+                    <div class="absolute inset-0 pointer-events-none z-20 flex flex-col justify-around items-center opacity-25 p-4">
+                        <div id="watermark-text-1" class="text-center font-mono font-black uppercase tracking-widest text-red-600 -rotate-25 text-xl sm:text-2xl leading-relaxed select-none">
+                            SOP INTERNAL - PT TRANSINDO GLOBAL SEVEN
+                        </div>
+                        <div id="watermark-text-2" class="text-center font-mono font-black uppercase tracking-widest text-red-600 -rotate-25 text-xl sm:text-2xl leading-relaxed select-none">
+                            SOP INTERNAL - PT TRANSINDO GLOBAL SEVEN
+                        </div>
+                        <div id="watermark-text-3" class="text-center font-mono font-black uppercase tracking-widest text-red-600 -rotate-25 text-xl sm:text-2xl leading-relaxed select-none">
+                            SOP INTERNAL - PT TRANSINDO GLOBAL SEVEN
+                        </div>
+                    </div>
+
+                    <div class="border-b-2 border-slate-900 pb-5 mb-6 flex justify-between items-start relative z-10">
+                        <img src="logo-transindo.png" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 540 220\'><path d=\'M25 28L135 28L62 195L25 195L82 66L25 66Z\' fill=\'%23E51B24\'/><path d=\'M125 28L210 28L137 195L100 195L157 66L125 66Z\' fill=\'%23111827\'/><text x=\'220\' y=\'90\' font-family=\'sans-serif\' font-weight=\'900\' font-size=\'55\' fill=\'%23111827\'>TRANS<tspan fill=\'%23E51B24\'>INDO</tspan></text><text x=\'220\' y=\'140\' font-family=\'sans-serif\' font-weight=\'900\' font-size=\'28\' fill=\'%23111827\'>PT. TRANSINDO GLOBAL SEVEN</text><text x=\'220\' y=\'180\' font-family=\'sans-serif\' font-weight=\'900\' font-size=\'28\' fill=\'%23111827\'>REGULATED AGENT</text></svg>'" class="h-12 w-auto object-contain">
+                        <span id="doc-id-badge" class="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">SOP-T7-000</span>
+                    </div>
+                    <h1 id="doc-title-head" class="text-xl font-extrabold text-slate-900 mb-2 relative z-10">Nama SOP</h1>
+                    <div id="doc-meta" class="flex flex-wrap gap-4 text-xs text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-200 mb-6 relative z-10"></div>
+                    <div class="space-y-6 text-xs text-slate-700 relative z-10">
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm mb-1.5 uppercase border-b pb-1">1. TUJUAN (OBJECTIVE)</h4>
+                            <p id="doc-objective" class="bg-slate-50/80 p-3 rounded-lg text-slate-600 italic"></p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm mb-1.5 uppercase border-b pb-1">2. CAKUPAN & RUANG LINGKUP</h4>
+                            <p id="doc-scope"></p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm mb-2 uppercase border-b pb-1">3. PROSEDUR PELAKSANAAN</h4>
+                            <div id="doc-steps" class="space-y-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Access Denied Modal -->
+    <div id="modal-denied" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white max-w-md w-full rounded-2xl p-6 shadow-2xl text-center border-2 border-rose-500">
+            <div class="bg-rose-100 text-rose-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="shield-alert" class="w-8 h-8"></i>
+            </div>
+            <h3 class="font-black text-lg text-slate-900 mb-1">Akses Ditolak (Restricted)</h3>
+            <p class="text-xs text-slate-500 mb-4">Dokumen ini diklasifikasikan sebagai <strong>SOP INTERNAL</strong>.</p>
+            <button onclick="closeModal('modal-denied')" class="bg-slate-900 text-white font-bold text-xs px-6 py-2.5 rounded-xl w-full">Saya Mengerti</button>
+        </div>
+    </div>
+
+    <!-- Visual Guide Modal -->
+    <div id="modal-visual-guide" class="fixed inset-0 z-50 bg-slate-900/85 backdrop-blur-sm hidden items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white max-w-2xl w-full rounded-2xl shadow-2xl overflow-hidden my-auto border-2 border-indigo-600">
+            <div class="bg-indigo-900 text-white px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="map" class="w-5 h-5 text-indigo-400"></i>
+                    <h3 class="font-bold text-sm">Panduan Visual Cara Menyalin Kode ke Komputer</h3>
+                </div>
+                <button onclick="closeModal('modal-visual-guide')" class="text-indigo-300 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="p-6 space-y-5 text-xs text-slate-700">
+                <!-- Diagram Visual Desktop -->
+                <div class="bg-slate-900 text-slate-100 p-4 rounded-xl border border-slate-700 font-mono text-[11px] relative">
+                    <div class="text-indigo-400 font-bold mb-2 border-b border-slate-700 pb-1 flex justify-between">
+                        <span>🖥️ LAYAR KOMPUTER / BROWSER ANDA</span>
+                        <span class="text-slate-500">Tampilan 2 Panel</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 text-center my-2">
+                        <div class="bg-slate-800 p-3 rounded border border-slate-700">
+                            <span class="block text-slate-400 font-bold">PANEL KIRI</span>
+                            <span class="text-[10px] text-slate-500">Obrolan / Chatbox</span>
+                        </div>
+                        <div class="bg-indigo-950 p-3 rounded border-2 border-indigo-500 relative">
+                            <span class="block text-indigo-300 font-bold">PANEL KANAN (EDITOR)</span>
+                            <div class="mt-2 bg-indigo-600 text-white font-sans font-bold text-[10px] px-2 py-1 rounded inline-flex items-center space-x-1 animate-pulse">
+                                <i data-lucide="copy" class="w-3 h-3"></i>
+                                <span>[Tombol Copy / Salin di sini!]</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step-by-Step Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-200">
+                        <div class="font-bold text-indigo-900 mb-1 flex items-center space-x-1">
+                            <span class="bg-indigo-600 text-white w-5 h-5 rounded-full inline-flex items-center justify-center text-[10px]">1</span>
+                            <span>Klik Tombol Copy</span>
+                        </div>
+                        <p class="text-[11px] text-slate-600">Klik ikon 📋 <strong>Copy</strong> di pojok kanan atas panel kode kanan.</p>
+                    </div>
+
+                    <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-200">
+                        <div class="font-bold text-indigo-900 mb-1 flex items-center space-x-1">
+                            <span class="bg-indigo-600 text-white w-5 h-5 rounded-full inline-flex items-center justify-center text-[10px]">2</span>
+                            <span>Buka Notepad</span>
+                        </div>
+                        <p class="text-[11px] text-slate-600">Tekan <strong>Win + R</strong>, ketik <code class="bg-white px-1 rounded border">notepad</code>, lalu tekan <strong>Ctrl + V</strong>.</p>
+                    </div>
+
+                    <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-200">
+                        <div class="font-bold text-indigo-900 mb-1 flex items-center space-x-1">
+                            <span class="bg-indigo-600 text-white w-5 h-5 rounded-full inline-flex items-center justify-center text-[10px]">3</span>
+                            <span>Simpan File</span>
+                        </div>
+                        <p class="text-[11px] text-slate-600">Simpan sebagai <code class="bg-white px-1 rounded border">index.html</code> (pilih <em>All Files</em>).</p>
+                    </div>
+                </div>
+
+                <button onclick="closeModal('modal-visual-guide')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-2.5 rounded-xl w-full">
+                    Saya Paham, Tutup Panduan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add SOP Modal -->
+    <div id="modal-add" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm hidden items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white max-w-2xl w-full rounded-2xl shadow-2xl overflow-hidden my-auto">
+            <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between border-b-2 border-red-600">
+                <h3 class="font-bold text-sm">Tambah SOP Baru</h3>
+                <button onclick="closeModal('modal-add')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form onsubmit="handleSaveSop(event)" class="p-6 space-y-4 text-xs">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Kode SOP *</label>
+                        <input type="text" id="new-id" required placeholder="SOP-T7-INT-005" class="w-full p-2.5 border rounded-xl outline-none focus:ring-2 focus:ring-red-500">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Kategori *</label>
+                        <select id="new-category" class="w-full p-2.5 border rounded-xl outline-none focus:ring-2 focus:ring-red-500 bg-white">
+                            <option value="Internal">SOP Internal (Khusus Staf)</option>
+                            <option value="External">SOP Eksternal (Mitra / Publik)</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Judul Dokumen SOP *</label>
+                    <input type="text" id="new-title" required placeholder="Judul SOP..." class="w-full p-2.5 border rounded-xl outline-none focus:ring-2 focus:ring-red-500">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Upload File Lampiran (PDF / Gambar)</label>
+                    <input type="file" id="new-file" class="w-full p-2 border rounded-xl bg-slate-50">
+                </div>
+                <div class="flex justify-end space-x-3 pt-3 border-t">
+                    <button type="button" onclick="closeModal('modal-add')" class="px-4 py-2 font-bold text-slate-600">Batal</button>
+                    <button type="submit" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold">Simpan Dokumen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        let currentRole = 'internal_admin';
+        let currentTab = 'all';
+
+        let sops = JSON.parse(localStorage.getItem('transindo_sops_data')) || [
+            {
+                id: 'SOP-T7-INT-001',
+                title: 'Pemeriksaan Keamanan Kargo & Pos (Screening X-Ray / ETD)',
+                category: 'Internal',
+                department: 'Keamanan Kargo & Operasional',
+                version: 'v3.2',
+                lastUpdated: '2026-10-25',
+                accessRoles: ['internal_admin'],
+                watermarkText: 'SOP INTERNAL - PT TRANSINDO GLOBAL SEVEN',
+                description: 'Prosedur standar inspeksi fisik, pemindaian X-Ray, dan deteksi bahan peledak (ETD) kargo.',
+                content: {
+                    objective: 'Memastikan kargo bebas bahan berbahaya (Dangerous Goods) sesuai regulasi Ditjen Hubud.',
+                    scope: 'Wajib bagi personel AVSEC bersertifikat di Gudang PT. Transindo Global Seven.',
+                    steps: [
+                        { title: 'Verifikasi Dokumen AWB', desc: 'Petugas memeriksa kelengkapan SMU/AWB dan Security Declaration.' },
+                        { title: 'Inspeksi X-Ray', desc: 'Kargo dilewatkan pada mesin X-Ray dual-view.' }
+                    ]
+                }
+            },
+            {
+                id: 'SOP-T7-EXT-010',
+                title: 'Prosedur Penyerahan Kargo oleh Shipper / Agen Ekspedisi',
+                category: 'External',
+                department: 'Customer Care & Acceptance',
+                version: 'v4.0',
+                lastUpdated: '2026-10-20',
+                accessRoles: ['internal_admin', 'external_mitra'],
+                watermarkText: 'SOP EKSTERNAL - PUBLIC OFFICIAL COPY',
+                description: 'Panduan standar bagi Mitra Agen dan Shipper saat menyerahkan kargo ke gudang penerimaan.',
+                content: {
+                    objective: 'Memberikan acuan kelengkapan dokumen dan pendaftaran slot truk.',
+                    scope: 'Seluruh mitra pengirim dan armada truk eksternal.',
+                    steps: [
+                        { title: 'Registrasi Online', desc: 'Booking antrean truk 2 jam sebelum kedatangan.' },
+                        { title: 'Penyerahan Surat Jalan', desc: 'Pengemudi menyerahkan Surat Jalan asli di Loket Acceptance.' }
+                    ]
+                }
+            }
+        ];
+
+        let logs = JSON.parse(localStorage.getItem('transindo_logs_data')) || [];
+
+        function saveState() {
+            localStorage.setItem('transindo_sops_data', JSON.stringify(sops));
+            localStorage.setItem('transindo_logs_data', JSON.stringify(logs));
+        }
+
+        function setRole(role) {
+            currentRole = role;
+            document.getElementById('role-admin').className = role === 'internal_admin' ? 'px-3 py-1 rounded-lg font-bold text-xs bg-red-600 text-white shadow flex items-center space-x-1' : 'px-3 py-1 rounded-lg font-bold text-xs text-slate-400 hover:text-white flex items-center space-x-1';
+            document.getElementById('role-mitra').className = role === 'external_mitra' ? 'px-3 py-1 rounded-lg font-bold text-xs bg-slate-700 text-white shadow flex items-center space-x-1' : 'px-3 py-1 rounded-lg font-bold text-xs text-slate-400 hover:text-white flex items-center space-x-1';
+            document.getElementById('access-badge').innerText = role === 'internal_admin' ? 'INTERNAL FULL ACCESS' : 'RESTRICTED PUBLIC ACCESS';
+            document.getElementById('btn-add-sop').style.display = role === 'internal_admin' ? 'flex' : 'none';
+            renderSops();
+        }
+
+        function setTab(tab) {
+            currentTab = tab;
+            document.getElementById('sops-grid').classList.toggle('hidden', tab === 'logs');
+            document.getElementById('logs-container').classList.toggle('hidden', tab !== 'logs');
+            document.getElementById('search-container').style.display = tab === 'logs' ? 'none' : 'block';
+            if (tab === 'logs') renderLogs(); else renderSops();
+        }
+
+        function renderSops() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const grid = document.getElementById('sops-grid');
+            grid.innerHTML = '';
+
+            sops.filter(sop => {
+                if (currentTab === 'internal' && sop.category !== 'Internal') return false;
+                if (currentTab === 'external' && sop.category !== 'External') return false;
+                return sop.title.toLowerCase().includes(query) || sop.id.toLowerCase().includes(query);
+            }).forEach(sop => {
+                const isAccessible = sop.accessRoles.includes(currentRole);
+                grid.innerHTML += `
+                    <div class="bg-white rounded-2xl border ${isAccessible ? 'border-slate-200' : 'border-slate-300 bg-slate-50/70'} p-5 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="font-mono text-xs font-bold text-slate-700 bg-slate-100 px-2.5 py-1 rounded border">${sop.id}</span>
+                                <span class="text-[11px] font-bold px-3 py-0.5 rounded-full ${sop.category === 'Internal' ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-800'}">${sop.category}</span>
+                            </div>
+                            <h3 class="font-bold text-slate-900 text-base mb-2">${sop.title}</h3>
+                            <p class="text-xs text-slate-500 mb-4">${sop.description}</p>
+                        </div>
+                        <div class="flex justify-between items-center border-t pt-3">
+                            <span class="text-xs ${isAccessible ? 'text-emerald-600' : 'text-rose-600'} font-bold">${isAccessible ? 'Akses Terbuka' : 'Terbuka Hanya Staf Internal'}</span>
+                            <div class="flex items-center space-x-2">
+                                ${currentRole === 'internal_admin' ? `
+                                    <button onclick="deleteSop('${sop.id}')" title="Hapus SOP" class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                ` : ''}
+                                <button onclick="openSop('${sop.id}')" class="px-4 py-1.5 rounded-xl text-xs font-bold ${isAccessible ? 'bg-red-600 text-white' : 'bg-slate-300 text-slate-700'}">
+                                    ${isAccessible ? 'Buka Dokumen' : 'Restricted'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        function deleteSop(id) {
+            const sop = sops.find(s => s.id === id);
+            if (!sop) return;
+
+            if (confirm(`Apakah Anda yakin ingin menghapus dokumen SOP:\n"${sop.title}" (${sop.id})?`)) {
+                sops = sops.filter(s => s.id !== id);
+                addLog(sop.id, sop.title, 'DELETED_SOP', 'Allowed');
+                saveState();
+                renderSops();
+            }
+        }
+
+        function openSop(id) {
+            const sop = sops.find(s => s.id === id);
+            if (!sop.accessRoles.includes(currentRole)) {
+                addLog(sop.id, sop.title, 'ACCESS_DENIED', 'Blocked');
+                document.getElementById('modal-denied').classList.remove('hidden');
+                document.getElementById('modal-denied').classList.add('flex');
+                return;
+            }
+
+            addLog(sop.id, sop.title, 'VIEWED', 'Allowed');
+            document.getElementById('view-title').innerText = sop.title;
+            document.getElementById('view-code').innerText = sop.id;
+            document.getElementById('doc-id-badge').innerText = sop.id;
+            document.getElementById('doc-title-head').innerText = sop.title;
+            document.getElementById('doc-objective').innerText = `"${sop.content.objective}"`;
+            document.getElementById('doc-scope').innerText = sop.content.scope;
+            
+            // Set Watermark sesuai tipe SOP
+            const wmText = sop.watermarkText || (sop.category === 'Internal' ? 'SOP INTERNAL - PT TRANSINDO GLOBAL SEVEN' : 'SOP EKSTERNAL - PUBLIC OFFICIAL COPY');
+            document.getElementById('watermark-text-1').innerText = wmText;
+            document.getElementById('watermark-text-2').innerText = wmText;
+            document.getElementById('watermark-text-3').innerText = wmText;
+
+            const stepsDiv = document.getElementById('doc-steps');
+            stepsDiv.innerHTML = sop.content.steps.map((st, i) => `
+                <div class="flex items-start space-x-3 bg-slate-50/90 p-2.5 rounded-xl border border-slate-200">
+                    <span class="bg-red-600 text-white font-bold w-5 h-5 rounded-full flex items-center justify-center text-[10px] flex-shrink-0 mt-0.5">${i+1}</span>
+                    <div><h5 class="font-bold text-slate-900">${st.title}</h5><p class="text-slate-600 text-[11px]">${st.desc}</p></div>
+                </div>
+            `).join('');
+
+            document.getElementById('modal-view').classList.remove('hidden');
+            document.getElementById('modal-view').classList.add('flex');
+            lucide.createIcons();
+        }
+
+        function addLog(docId, docTitle, action, status) {
+            logs.unshift({
+                time: new Date().toLocaleString('id-ID'),
+                user: currentRole === 'internal_admin' ? 'Staf Admin' : 'Mitra Shipper',
+                role: currentRole,
+                docId, docTitle, action, status
+            });
+            saveState();
+        }
+
+        function renderLogs() {
+            const tbody = document.getElementById('logs-table-body');
+            tbody.innerHTML = logs.map(l => `
+                <tr class="hover:bg-slate-50">
+                    <td class="p-3.5 font-mono text-slate-500">${l.time}</td>
+                    <td class="p-3.5 font-bold">${l.user}</td>
+                    <td class="p-3.5">${l.role}</td>
+                    <td class="p-3.5"><span class="font-mono text-red-600 font-bold">${l.docId}</span></td>
+                    <td class="p-3.5 font-bold">${l.action}</td>
+                    <td class="p-3.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${l.status === 'Allowed' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${l.status}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function openAddModal() {
+            document.getElementById('modal-add').classList.remove('hidden');
+            document.getElementById('modal-add').classList.add('flex');
+        }
+
+        function toggleVisualGuide() {
+            const modal = document.getElementById('modal-visual-guide');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            } else {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.getElementById(id).classList.remove('flex');
+        }
+
+        function handleSaveSop(e) {
+            e.preventDefault();
+            const id = document.getElementById('new-id').value;
+            const title = document.getElementById('new-title').value;
+            const category = document.getElementById('new-category').value;
+
+            sops.unshift({
+                id, title, category,
+                department: 'Operasional', version: 'v1.0', lastUpdated: '2026-10-30',
+                accessRoles: category === 'Internal' ? ['internal_admin'] : ['internal_admin', 'external_mitra'],
+                watermarkText: category === 'Internal' ? 'SOP INTERNAL - PT TRANSINDO GLOBAL SEVEN' : 'SOP EKSTERNAL - PUBLIC OFFICIAL COPY',
+                description: 'Dokumen SOP terverifikasi baru.',
+                content: { objective: 'Tujuan SOP baru.', scope: 'Seluruh area.', steps: [{ title: 'Langkah Awal', desc: 'Pelaksanaan prosedur.' }] }
+            });
+
+            saveState();
+            closeModal('modal-add');
+            renderSops();
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            lucide.createIcons();
+            renderSops();
+        }
+    </script>
+</body>
+</html>
